@@ -1,16 +1,16 @@
 name: pullreqのassignee自動割り当て
- on:
-   pull_request:
-     types: [opened]
- jobs:
-   author-assign:
-     timeout-minutes: 5
-     runs-on: ubuntu-latest
-     steps:
-       - run: gh pr edit $NUMBER --add-assignee $ASSIGNEE
-         env:
-           NUMBER: ${{ github.event.pull_request.number }}
-           ASSIGNEE: ${{ github.event.pull_request.user.login }}
-           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-           GH_REPO: ${{ github.repository }}
-         if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+on:
+  pull_request:
+    types: [opened]
+jobs:
+  author-assign:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh pr edit $NUMBER --add-assignee $ASSIGNEE
+        env:
+          NUMBER: ${{ github.event.pull_request.number }}
+          ASSIGNEE: ${{ github.event.pull_request.user.login }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
