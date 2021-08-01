@@ -1,0 +1,19 @@
+name: long-dispatch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  invoke:
+    runs-on: self-hosted
+    steps:
+      - name: hello
+        run: echo 'hello long dispatch'
+      - name: file
+        run: |
+          pwd
+          touch aaaa
+      - name: sleep
+        run: sleep 60
+      - name: bye
+        run: echo 'bye'
