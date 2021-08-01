@@ -17,3 +17,16 @@ jobs:
         run: sleep 60
       - name: bye
         run: echo 'bye'
+  invoke2:
+    runs-on: self-hosted
+    steps:
+      - name: hello
+        run: echo 'hello long dispatch2'
+      - name: file
+        run: |
+          pwd
+          touch bbbb
+      - name: sleep
+        run: sleep 60
+      - name: bye
+        run: echo 'bye2'
