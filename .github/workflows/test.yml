@@ -1,0 +1,9 @@
+name: CIテスト
+on:
+  pull_request:
+jobs:
+  test:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - run: true
