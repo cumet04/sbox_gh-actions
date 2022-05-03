@@ -1,0 +1,16 @@
+name: dump-event-json
+
+on:
+  pull_request:
+  push:
+
+defaults:
+  timeout-minutes: 5
+  runs-on: ubuntu-latest
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "event_name: ${{ github.event_name }}"'
+      - run: cat $GITHUB_EVENT_PATH
