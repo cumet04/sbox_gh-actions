@@ -6,7 +6,6 @@ on:
 
 defaults:
   timeout-minutes: 5
-  runs-on: ubuntu-latest
 
 jobs:
   dump:
