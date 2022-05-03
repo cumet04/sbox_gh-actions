@@ -22,11 +22,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     # depandabotが立てたpullreqに対し、エンジニアメンバーの誰かをランダムアサインする
-    # if: github.event.pull_request.user.login == 'dependabot[bot]'
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - uses: actions/github-script@v6
         env:
           # CODEOWNERSと同じフォーマット
+          # MEMO: サンプルとしてinvalidな（末尾ハイフンな）ユーザ名を指定している
           NAMES: "@foo- @bar- @baz-"
         with:
           script: |
@@ -34,10 +35,10 @@ jobs:
             const index = Math.floor(Math.random() * names.length)
             const assignee = names[index]
 
-            // github.rest.issues.addAssignees({
-            console.log({
+            github.rest.issues.addAssignees({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               assignees: [assignee]
             })
+        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
