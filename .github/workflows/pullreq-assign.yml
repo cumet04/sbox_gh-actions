@@ -1,11 +1,14 @@
-name: pullreqのassignee自動割り当て
+name: pullreqの自動assign
 on:
   pull_request:
     types: [opened]
+
 jobs:
   author-assign:
-    timeout-minutes: 5
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # エンジニアが立てたpullreqに対し、作者自身をassigneeとして割り当てる
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
     steps:
       - run: gh pr edit $NUMBER --add-assignee $ASSIGNEE
         env:
@@ -14,3 +17,27 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
         if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+
+  dependabot-assign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # depandabotが立てたpullreqに対し、エンジニアメンバーの誰かをランダムアサインする
+    # if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - uses: actions/github-script@v6
+        env:
+          # CODEOWNERSと同じフォーマット
+          NAMES: "@foo- @bar- @baz-"
+        with:
+          script: |
+            const names = process.env.NAMES.split(' ').map( name => name.replace('@', '') )
+            const index = Math.floor(Math.random() * names.length)
+            const assignee = names[index]
+
+            // github.rest.issues.addAssignees({
+            console.log({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              assignees: [assignee]
+            })
