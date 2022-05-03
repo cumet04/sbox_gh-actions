@@ -4,10 +4,10 @@ on:
   pull_request:
   push:
 
-defaults:
-  timeout-minutes: 5
 
 jobs:
+  defaults:
+    timeout-minutes: 5
   dump:
     runs-on: ubuntu-latest
     steps:
