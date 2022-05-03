@@ -4,13 +4,10 @@ on:
   pull_request:
   push:
 
-defaults:
-  run:
-    timeout-minutes: 5
-
 jobs:
   dump:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - run: 'echo "event_name: ${{ github.event_name }}"'
       - run: cat $GITHUB_EVENT_PATH
