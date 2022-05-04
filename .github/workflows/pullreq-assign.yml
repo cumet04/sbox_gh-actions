@@ -43,3 +43,30 @@ jobs:
               assignees: [assignee]
             })
         if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+
+  dependabot-assign-codeowners:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # depandabotが立てたpullreqに対し、CODEOWNERSの誰かをランダムアサインする
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const owners = require('fs').readFileSync('.github/CODEOWNERS').toString()
+            const names = owners                               // '* @foo @bar @baz\napp/ @foo\n...'
+              .split('\n')[0]                                  // '* @foo @bar @baz'
+              .replace(/^\* /, '')                             // '@foo @bar @baz'
+              .split(' ').map( name => name.replace('@', '') ) // ['foo', 'bar', 'baz']
+
+            const index = Math.floor(Math.random() * names.length)
+            const assignee = names[index]
+
+            github.rest.issues.addAssignees({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              assignees: [assignee]
+            })
+        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
