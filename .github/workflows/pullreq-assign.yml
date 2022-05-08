@@ -41,6 +41,8 @@ jobs:
               repo: context.repo.repo,
               assignees: [assignee]
             })
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
 
   dependabot-assign-codeowners:
@@ -68,4 +70,6 @@ jobs:
               repo: context.repo.repo,
               assignees: [assignee]
             })
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
