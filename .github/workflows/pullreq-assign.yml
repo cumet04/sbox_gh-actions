@@ -86,9 +86,9 @@ jobs:
   #        NUMBER: ${{ github.event.pull_request.number }}
   #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   #        MEMBERS: |
-  #          @foo-
-  #          @bar-
-  #          @baz-
+  #          foo-
+  #          bar-
+  #          baz-
   #      if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
 
   dependabot-assign-codeowners-shell:
@@ -101,6 +101,7 @@ jobs:
       - run: |
           head -n 1 .github/CODEOWNERS |
             sed s/^\*\ // |
+            tr -d '@' |
             sed s/\ /\\n/g |
             shuf -n 1 |
             xargs gh pr edit $NUMBER --add-assignee
