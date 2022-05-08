@@ -69,3 +69,42 @@ jobs:
               assignees: [assignee]
             })
         if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+
+  dependabot-assign-shell:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # depandabotが立てたpullreqに対し、エンジニアメンバーの誰かをランダムアサインする
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          echo "$MEMBERS" |
+            tail -n +2 |
+            shuf -n 1 |
+            xargs gh pr edit $NUMBER --add-assignee
+        env:
+          NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MEMBERS: |
+            @foo-
+            @bar-
+            @baz-
+        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+
+  dependabot-assign-codeowners-shell:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # depandabotが立てたpullreqに対し、CODEOWNERSの誰かをランダムアサインする
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v3
+      - run: |
+          head -n 1 .github/CODEOWNERS |
+            sed s/^\*\ // |
+            sed s/\ /\\n/g |
+            shuf -n 1 |
+            xargs gh pr edit $NUMBER --add-assignee
+        env:
+          NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
