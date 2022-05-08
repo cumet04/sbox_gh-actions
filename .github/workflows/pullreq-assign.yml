@@ -4,98 +4,98 @@ on:
     types: [opened]
 
 jobs:
-  author-assign:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    # エンジニアが立てたpullreqに対し、作者自身をassigneeとして割り当てる
-    if: github.event.pull_request.user.login != 'dependabot[bot]'
-    steps:
-      - run: gh pr edit $NUMBER --add-assignee $ASSIGNEE
-        env:
-          NUMBER: ${{ github.event.pull_request.number }}
-          ASSIGNEE: ${{ github.event.pull_request.user.login }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+  #author-assign:
+  #  runs-on: ubuntu-latest
+  #  timeout-minutes: 5
+  #  # エンジニアが立てたpullreqに対し、作者自身をassigneeとして割り当てる
+  #  if: github.event.pull_request.user.login != 'dependabot[bot]'
+  #  steps:
+  #    - run: gh pr edit $NUMBER --add-assignee $ASSIGNEE
+  #      env:
+  #        NUMBER: ${{ github.event.pull_request.number }}
+  #        ASSIGNEE: ${{ github.event.pull_request.user.login }}
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #      if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
 
-  dependabot-assign:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    # depandabotが立てたpullreqに対し、エンジニアメンバーの誰かをランダムアサインする
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
-    steps:
-      - uses: actions/github-script@v6
-        with:
-          script: |
-            const names = [
-              // MEMO: サンプルとしてinvalidな（末尾ハイフンな）ユーザ名を指定している
-              'foo-',
-              'bar-',
-              'baz-',
-            ]
-            const index = Math.floor(Math.random() * names.length)
-            const assignee = names[index]
+  #dependabot-assign:
+  #  runs-on: ubuntu-latest
+  #  timeout-minutes: 5
+  #  # depandabotが立てたpullreqに対し、エンジニアメンバーの誰かをランダムアサインする
+  #  if: github.event.pull_request.user.login == 'dependabot[bot]'
+  #  steps:
+  #    - uses: actions/github-script@v6
+  #      with:
+  #        script: |
+  #          const names = [
+  #            // MEMO: サンプルとしてinvalidな（末尾ハイフンな）ユーザ名を指定している
+  #            'foo-',
+  #            'bar-',
+  #            'baz-',
+  #          ]
+  #          const index = Math.floor(Math.random() * names.length)
+  #          const assignee = names[index]
 
-            github.rest.issues.addAssignees({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              assignees: [assignee]
-            })
-        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+  #          github.rest.issues.addAssignees({
+  #            issue_number: context.issue.number,
+  #            owner: context.repo.owner,
+  #            repo: context.repo.repo,
+  #            assignees: [assignee]
+  #          })
+  #      if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
 
-  dependabot-assign-codeowners:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    # depandabotが立てたpullreqに対し、CODEOWNERSの誰かをランダムアサインする
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/github-script@v6
-        with:
-          script: |
-            const owners = require('fs').readFileSync('.github/CODEOWNERS').toString()
-            const names = owners                               // '* @foo @bar @baz\napp/ @foo\n...'
-              .split('\n')[0]                                  // '* @foo @bar @baz'
-              .replace(/^\* /, '')                             // '@foo @bar @baz'
-              .split(' ').map( name => name.replace('@', '') ) // ['foo', 'bar', 'baz']
+  #dependabot-assign-codeowners:
+  #  runs-on: ubuntu-latest
+  #  timeout-minutes: 5
+  #  # depandabotが立てたpullreqに対し、CODEOWNERSの誰かをランダムアサインする
+  #  if: github.event.pull_request.user.login == 'dependabot[bot]'
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #    - uses: actions/github-script@v6
+  #      with:
+  #        script: |
+  #          const owners = require('fs').readFileSync('.github/CODEOWNERS').toString()
+  #          const names = owners                               // '* @foo @bar @baz\napp/ @foo\n...'
+  #            .split('\n')[0]                                  // '* @foo @bar @baz'
+  #            .replace(/^\* /, '')                             // '@foo @bar @baz'
+  #            .split(' ').map( name => name.replace('@', '') ) // ['foo', 'bar', 'baz']
 
-            const index = Math.floor(Math.random() * names.length)
-            const assignee = names[index]
+  #          const index = Math.floor(Math.random() * names.length)
+  #          const assignee = names[index]
 
-            github.rest.issues.addAssignees({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              assignees: [assignee]
-            })
-        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+  #          github.rest.issues.addAssignees({
+  #            issue_number: context.issue.number,
+  #            owner: context.repo.owner,
+  #            repo: context.repo.repo,
+  #            assignees: [assignee]
+  #          })
+  #      if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
 
-  dependabot-assign-shell:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    # depandabotが立てたpullreqに対し、エンジニアメンバーの誰かをランダムアサインする
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          echo "$MEMBERS" |
-            tail -n +2 |
-            shuf -n 1 |
-            xargs gh pr edit $NUMBER --add-assignee
-        env:
-          NUMBER: ${{ github.event.pull_request.number }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MEMBERS: |
-            @foo-
-            @bar-
-            @baz-
-        if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
+  #dependabot-assign-shell:
+  #  runs-on: ubuntu-latest
+  #  timeout-minutes: 5
+  #  # depandabotが立てたpullreqに対し、エンジニアメンバーの誰かをランダムアサインする
+  #  if: github.event.pull_request.user.login == 'dependabot[bot]'
+  #  steps:
+  #    - uses: actions/checkout@v3
+  #    - run: |
+  #        echo "$MEMBERS" |
+  #          tail -n +2 |
+  #          shuf -n 1 |
+  #          xargs gh pr edit $NUMBER --add-assignee
+  #      env:
+  #        NUMBER: ${{ github.event.pull_request.number }}
+  #        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #        MEMBERS: |
+  #          @foo-
+  #          @bar-
+  #          @baz-
+  #      if: ${{ toJSON(github.event.pull_request.assignees) == '[]' }}
 
   dependabot-assign-codeowners-shell:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     # depandabotが立てたpullreqに対し、CODEOWNERSの誰かをランダムアサインする
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    #if: github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - uses: actions/checkout@v3
       - run: |
