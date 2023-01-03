@@ -1,0 +1,10 @@
+name: on-check-run
+on:
+  check_run
+
+jobs:
+  on-status:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "event_name: ${{ github.event_name }}"'
+      - run: cat $GITHUB_EVENT_PATH
