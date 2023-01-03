@@ -1,0 +1,12 @@
+name: on-status
+on:
+  status
+
+jobs:
+  on-status:
+    runs-on: ubuntu-latest
+    #if: >-
+    #  github.event.state == 'error' ||
+    #  github.event.state == 'failure'
+    steps:
+      - run: echo ok
