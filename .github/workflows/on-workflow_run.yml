@@ -1,6 +1,9 @@
 name: on-workflow_run
 on:
-  workflow_run
+  workflow_run:
+    workflows: 
+      - dump-event-json
+      - failable
 
 jobs:
   on-workflow_run:
