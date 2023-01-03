@@ -1,6 +1,7 @@
 name: on-check_run
 on:
-  check_run
+  check_run:
+    types: [created, rerequested, completed, requested_action]
 
 jobs:
   on-check_run:
