@@ -9,4 +9,5 @@ jobs:
     #  github.event.state == 'error' ||
     #  github.event.state == 'failure'
     steps:
-      - run: echo ok
+      - run: 'echo "event_name: ${{ github.event_name }}"'
+      - run: cat $GITHUB_EVENT_PATH
