@@ -1,9 +1,9 @@
-name: on-check-run
+name: on-check_run
 on:
   check_run
 
 jobs:
-  on-status:
+  on-check_run:
     runs-on: ubuntu-latest
     steps:
       - run: 'echo "event_name: ${{ github.event_name }}"'
