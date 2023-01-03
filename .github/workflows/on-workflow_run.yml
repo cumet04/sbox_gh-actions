@@ -1,0 +1,10 @@
+name: on-workflow_run
+on:
+  workflow_run
+
+jobs:
+  on-workflow_run:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo "event_name: ${{ github.event_name }}"'
+      - run: cat $GITHUB_EVENT_PATH
