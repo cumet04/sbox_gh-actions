@@ -1,0 +1,10 @@
+name: _name-sample1
+on:
+  pull_request:
+  push:
+jobs:
+  test:
+    timeout-minutes: 4
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ok
