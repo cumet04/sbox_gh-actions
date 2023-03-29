@@ -2,6 +2,17 @@ name: workflow-dispatch
 
 on:
   workflow_dispatch:
+    inputs:
+      some_choice:
+        type: choice
+        description: choiceのサンプル入力
+        options:
+          - foo
+          - bar
+          - baz
+      some_text:
+        required: true
+        description: 必須テキスト入力サンプル
 
 jobs:
   invoke:
