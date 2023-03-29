@@ -1,0 +1,16 @@
+name: workflow-dispatch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  invoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: hello
+        run: echo 'hello'
+      - name: sleep
+        run: sleep 5
+      - name: bye
+        run: echo 'bye'
