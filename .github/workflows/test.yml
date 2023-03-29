@@ -8,3 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo ok
+      - run: |
+          cat <<EOS
+          ##[group]Run echo ok2
+          echo ok2
+          shell: /usr/bin/bash -e {0}
+          ##[endgroup]
+          ##[group]Run echo ok3
+          echo ok3
+          shell: /usr/bin/bash -e {0}
+          ##[endgroup]
+          EOS
